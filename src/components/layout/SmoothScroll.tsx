@@ -9,11 +9,10 @@ gsap.registerPlugin(ScrollTrigger);
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.5,
-      easing: (t) => 1 - Math.pow(1 - t, 4), // Quartic ease-out for ultra smooth feel
+      lerp: 0.1,
       orientation: 'vertical',
       gestureOrientation: 'vertical',
-      wheelMultiplier: 1.5,
+      wheelMultiplier: 1,
     });
 
     lenis.on('scroll', ScrollTrigger.update);

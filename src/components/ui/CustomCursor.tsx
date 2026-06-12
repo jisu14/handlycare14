@@ -54,22 +54,23 @@ export default function CustomCursor() {
     <>
       {/* Outer Ring */}
       <motion.div
-        className="fixed top-0 left-0 w-10 h-10 border border-white rounded-full pointer-events-none z-[9999] mix-blend-difference"
+        className="fixed top-0 left-0 w-10 h-10 border border-teal-400/30 rounded-full pointer-events-none z-[9999]"
         style={{
           x: ringX,
           y: ringY,
           translateX: '-50%',
           translateY: '-50%',
+          backdropFilter: isHovering ? 'blur(4px)' : 'none',
         }}
         animate={{
           scale: isHovering ? 1.5 : 1,
-          backgroundColor: isHovering ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 0)',
+          backgroundColor: isHovering ? 'rgba(20, 184, 166, 0.15)' : 'rgba(20, 184, 166, 0)',
         }}
         transition={{ duration: 0.2 }}
       />
       {/* Inner Dot */}
       <motion.div
-        className="fixed top-0 left-0 w-2 h-2 bg-white rounded-full pointer-events-none z-[10000] mix-blend-difference"
+        className="fixed top-0 left-0 w-2 h-2 bg-teal-400 rounded-full pointer-events-none z-[10000] shadow-[0_0_10px_rgba(20,184,166,0.5)]"
         style={{
           x: cursorX,
           y: cursorY,

@@ -55,7 +55,7 @@ export default function Nav() {
         <CardNav
           logoText="Handly Care"
           items={navItems}
-          baseColor="transparent"
+          baseColor="rgba(255, 255, 255, 0.05)"
           menuColor="#ffffff"
           buttonBgColor="#ffffff"
           buttonTextColor="#000000"

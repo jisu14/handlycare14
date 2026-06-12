@@ -174,7 +174,7 @@ const CardNav: React.FC<CardNavProps> = ({
     >
       <nav
         ref={navRef}
-        className={`card-nav ${isExpanded ? 'open' : ''} block h-[60px] p-0 rounded-xl shadow-md relative overflow-hidden will-change-[height]`}
+        className={`card-nav ${isExpanded ? 'open rounded-[2rem]' : 'rounded-full'} block h-[60px] p-0 shadow-md relative overflow-hidden will-change-[height] backdrop-blur-md border border-white/10 transition-[border-radius] duration-400`}
         style={{ backgroundColor: baseColor }}
       >
         <div className="card-nav-top absolute inset-x-0 top-0 h-[60px] flex items-center justify-between p-2 pl-[1.1rem] z-[2]">
@@ -219,7 +219,7 @@ const CardNav: React.FC<CardNavProps> = ({
             </button>
             <button
               type="button"
-              className="card-nav-cta-button hidden md:inline-flex border-0 rounded-[calc(0.75rem-0.2rem)] px-4 items-center h-full font-medium cursor-pointer transition-colors duration-300"
+              className="card-nav-cta-button hidden md:inline-flex border-0 rounded-full px-5 items-center h-full font-medium cursor-pointer transition-colors duration-300"
               style={{ backgroundColor: buttonBgColor, color: buttonTextColor }}
               onClick={onCtaClick}
             >

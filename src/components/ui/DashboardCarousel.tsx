@@ -81,7 +81,8 @@ export default function DashboardCarousel() {
               key={activeIndex}
               src={slides[activeIndex].src}
               title={slides[activeIndex].title}
-              sandbox="allow-scripts"
+              sandbox="allow-scripts allow-same-origin"
+              loading="lazy"
               className="absolute inset-0 w-full h-full border-0"
               style={{ pointerEvents: paused ? 'auto' : 'none' }}
               initial={{ opacity: 0, y: 10 }}
