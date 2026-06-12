@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Schedules — Handly</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { height: 100%; overflow: hidden; background: #f8fafc; }
+  body { font-family: 'Inter', sans-serif; background: #f8fafc; font-size: 13px; width: 900px; height: 600px; overflow: hidden; transform-origin: top left; }
+
+  .content { padding: 18px 24px; height: 100%; overflow: hidden; }
+
+  .page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
+  .page-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #94a3b8; margin-bottom: 3px; }
+  .page-title { font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 2px; }
+  .page-sub { font-size: 11px; color: #64748b; }
+  .btn-primary { background: #10b981; color: #fff; border: none; border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+  .btn-primary svg { width: 13px; height: 13px; }
+
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+  .stat-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; }
+  .stat-icon { width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .stat-icon svg { width: 15px; height: 15px; }
+  .stat-icon.blue { background: #eff6ff; color: #3b82f6; }
+  .stat-icon.purple { background: #f5f3ff; color: #7c3aed; }
+  .stat-icon.orange { background: #fff7ed; color: #ea580c; }
+  .stat-icon.green { background: #f0fdf4; color: #16a34a; }
+  .stat-val { font-size: 20px; font-weight: 700; color: #0f172a; line-height: 1; }
+  .stat-lbl { font-size: 10px; color: #64748b; }
+
+  .filter-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .tab-group { display: flex; border: 1px solid #e5e7eb; border-radius: 7px; overflow: hidden; }
+  .tab { padding: 5px 11px; font-size: 11.5px; font-weight: 500; background: #fff; border: none; color: #64748b; cursor: pointer; font-family: inherit; }
+  .tab.active { background: #0f172a; color: #fff; }
+  .select-pill { padding: 5px 10px; font-size: 11px; border: 1px solid #e5e7eb; border-radius: 7px; background: #fff; color: #374151; display: flex; align-items: center; gap: 5px; cursor: pointer; }
+  .select-pill svg { width: 11px; height: 11px; color: #94a3b8; }
+  .visit-count { margin-left: auto; font-size: 11px; color: #94a3b8; }
+
+  .date-heading { font-size: 10.5px; font-weight: 700; color: #10b981; letter-spacing: 0.05em; text-transform: uppercase; padding: 6px 0 5px; border-bottom: 1px solid #e5e7eb; margin-bottom: 3px; }
+
+  .schedule-row { display: grid; grid-template-columns: 65px 1fr 130px 90px 1fr auto; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; background: #fff; border: 1px solid #f1f5f9; margin-bottom: 5px; cursor: pointer; transition: background 0.15s; }
+  .schedule-row:hover { background: #f8fafc; }
+  .time-main { font-size: 11.5px; font-weight: 600; color: #0f172a; }
+  .time-dur { font-size: 9.5px; color: #94a3b8; }
+  .patient-name { font-size: 12px; font-weight: 600; color: #0f172a; }
+  .patient-type { font-size: 10.5px; color: #64748b; }
+  .caregiver-col { display: flex; align-items: center; gap: 5px; }
+  .cg-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .cg-name { font-size: 11.5px; font-weight: 500; color: #0f172a; }
+  .cg-city { font-size: 9.5px; color: #94a3b8; }
+  .status-pill { display: inline-flex; padding: 2px 9px; border-radius: 999px; font-size: 10.5px; font-weight: 600; background: #f5f3ff; color: #7c3aed; border: 1px solid #e9d5ff; }
+  .notes { font-size: 10.5px; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .row-actions { display: flex; gap: 5px; white-space: nowrap; }
+  .action-btn { font-size: 10.5px; font-weight: 500; cursor: pointer; padding: 3px 7px; border-radius: 5px; border: none; background: transparent; }
+  .action-btn.done { color: #10b981; }
+  .action-btn.cancel { color: #94a3b8; }
+  .action-btn:hover { background: #f1f5f9; }
+</style>
+</head>
+<body>
+<div class="content">
+  <div class="page-header">
+    <div>
+      <div class="page-label">Schedules</div>
+      <div class="page-title">Schedules</div>
+      <div class="page-sub">13 upcoming visits</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <div style="display:flex;border:1px solid #e5e7eb;border-radius:7px;overflow:hidden;">
+        <button style="padding:6px 12px;font-size:11px;font-weight:500;border:none;background:#fff;color:#64748b;cursor:pointer;display:flex;align-items:center;gap:4px;font-family:inherit">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg> List
+        </button>
+        <button style="padding:6px 12px;font-size:11px;font-weight:500;border:none;background:#fff;color:#64748b;cursor:pointer;display:flex;align-items:center;gap:4px;font-family:inherit">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Calendar
+        </button>
+      </div>
+      <button class="btn-primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Schedule visit
+      </button>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div><div class="stat-val">5</div><div class="stat-lbl">Today</div></div></div>
+    <div class="stat-card"><div class="stat-icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div><div class="stat-val">13</div><div class="stat-lbl">This week</div></div></div>
+    <div class="stat-card"><div class="stat-icon orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg></div><div><div class="stat-val">13</div><div class="stat-lbl">Upcoming</div></div></div>
+    <div class="stat-card"><div class="stat-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg></div><div><div class="stat-val">9</div><div class="stat-lbl">Completed</div></div></div>
+  </div>
+
+  <div class="filter-bar">
+    <div class="tab-group">
+      <button class="tab active">Upcoming</button>
+      <button class="tab">Past</button>
+      <button class="tab">All</button>
+    </div>
+    <div class="select-pill">All caretakers <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+    <div class="select-pill">All statuses <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+    <div class="visit-count">13 visits</div>
+  </div>
+
+  <div class="date-heading">Today — Mon, 8 Jun, 2026</div>
+
+  <div class="schedule-row">
+    <div><div class="time-main">8:00 AM</div><div class="time-dur">6h</div></div>
+    <div><div class="patient-name">Lakshmi Nair</div><div class="patient-type">Dementia / Alzheimer's</div></div>
+    <div class="caregiver-col"><div class="cg-dot" style="background:#3b82f6"></div><div><div class="cg-name">Sunita Devi</div><div class="cg-city">Mumbai</div></div></div>
+    <div><span class="status-pill">Scheduled</span></div>
+    <div class="notes">Daily morning care. Medication at 9am and 1pm.</div>
+    <div class="row-actions"><button class="action-btn done">Mark done</button><button class="action-btn cancel">Cancel</button></div>
+  </div>
+  <div class="schedule-row">
+    <div><div class="time-main">8:00 AM</div><div class="time-dur">10h</div></div>
+    <div><div class="patient-name">Kamala Bai</div><div class="patient-type">Palliative care</div></div>
+    <div class="caregiver-col"><div class="cg-dot" style="background:#10b981"></div><div><div class="cg-name">Priya Thomas</div><div class="cg-city">Kochi</div></div></div>
+    <div><span class="status-pill">Scheduled</span></div>
+    <div class="notes">Dr. Rekha Shetty tele-consultation around 11am.</div>
+    <div class="row-actions"><button class="action-btn done">Mark done</button><button class="action-btn cancel">Cancel</button></div>
+  </div>
+  <div class="schedule-row">
+    <div><div class="time-main">8:00 AM</div><div class="time-dur">5h</div></div>
+    <div><div class="patient-name">Padma Iyer</div><div class="patient-type">Elderly care</div></div>
+    <div class="caregiver-col"><div class="cg-dot" style="background:#f59e0b"></div><div><div class="cg-name">Suresh Babu</div><div class="cg-city">Chennai</div></div></div>
+    <div><span class="status-pill">Scheduled</span></div>
+    <div class="notes">Physiotherapist expected at 10am.</div>
+    <div class="row-actions"><button class="action-btn done">Mark done</button><button class="action-btn cancel">Cancel</button></div>
+  </div>
+  <div class="schedule-row">
+    <div><div class="time-main">9:00 AM</div><div class="time-dur">5h</div></div>
+    <div><div class="patient-name">Gopal Krishnan</div><div class="patient-type">Dementia / Alzheimer's</div></div>
+    <div class="caregiver-col"><div class="cg-dot" style="background:#f59e0b"></div><div><div class="cg-name">Kavya Reddy</div><div class="cg-city">Bengaluru</div></div></div>
+    <div><span class="status-pill">Scheduled</span></div>
+    <div class="notes">Regular daily care. Lunch preparation included.</div>
+    <div class="row-actions"><button class="action-btn done">Mark done</button><button class="action-btn cancel">Cancel</button></div>
+  </div>
+  <div class="schedule-row">
+    <div><div class="time-main">2:00 PM</div><div class="time-dur">3h</div></div>
+    <div><div class="patient-name">Vikram Iyer</div><div class="patient-type">Post-surgery recovery</div></div>
+    <div class="caregiver-col"><div class="cg-dot" style="background:#8b5cf6"></div><div><div class="cg-name">Ramesh Kumar</div><div class="cg-city">Delhi</div></div></div>
+    <div><span class="status-pill">Scheduled</span></div>
+    <div class="notes">Afternoon mobility check. Wound review.</div>
+    <div class="row-actions"><button class="action-btn done">Mark done</button><button class="action-btn cancel">Cancel</button></div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var DESIGN_W = 900, DESIGN_H = 600;
+  function scale() {
+    var sx = window.innerWidth / DESIGN_W;
+    var sy = window.innerHeight / DESIGN_H;
+    var s = Math.min(sx, sy);
+    document.body.style.transform = 'scale(' + s + ')';
+    document.body.style.transformOrigin = 'top left';
+    document.body.style.width = DESIGN_W + 'px';
+    document.body.style.height = DESIGN_H + 'px';
+  }
+  scale();
+  window.addEventListener('resize', scale);
+})();
+document.querySelectorAll('.tab').forEach(function(tab) {
+  tab.addEventListener('click', function() { document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');}); this.classList.add('active'); });
+});
+</script>
+</body>
+</html>

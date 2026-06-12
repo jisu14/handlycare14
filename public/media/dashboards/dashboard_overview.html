@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard — Handly</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { height: 100%; overflow: hidden; background: #f8fafc; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #f8fafc;
+    font-size: 13px;
+    width: 900px;
+    height: 600px;
+    overflow: hidden;
+    transform-origin: top left;
+  }
+
+  .content { overflow-y: hidden; padding: 20px 24px; height: 100%; }
+
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .page-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #94a3b8; margin-bottom: 2px; }
+  .page-title { font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 1px; }
+  .page-sub { font-size: 11px; color: #64748b; }
+
+  /* KPI Cards */
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px; }
+  .kpi-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px; transition: box-shadow 0.2s; }
+  .kpi-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.07); }
+  .kpi-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
+  .kpi-icon svg { width: 16px; height: 16px; }
+  .kpi-icon.green { background: #f0fdf4; color: #16a34a; }
+  .kpi-icon.teal { background: #f0fdfa; color: #0d9488; }
+  .kpi-icon.blue { background: #eff6ff; color: #2563eb; }
+  .kpi-icon.orange { background: #fff7ed; color: #ea580c; }
+  .kpi-value { font-size: 24px; font-weight: 700; color: #0f172a; line-height: 1; margin-bottom: 3px; }
+  .kpi-value.green { color: #16a34a; }
+  .kpi-value.teal { color: #0d9488; }
+  .kpi-value.orange { color: #ea580c; }
+  .kpi-label { font-size: 11.5px; font-weight: 600; color: #0f172a; margin-bottom: 1px; }
+  .kpi-sub { font-size: 10px; color: #94a3b8; }
+
+  /* Attention Banner */
+  .attention-banner { background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px; padding: 11px 16px; margin-bottom: 12px; }
+  .attention-header { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+  .attention-header svg { width: 13px; height: 13px; color: #d97706; }
+  .attention-header span { font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #d97706; }
+  .attention-item { display: flex; align-items: center; justify-content: space-between; font-size: 11.5px; color: #92400e; padding: 1.5px 0; }
+  .attention-item svg { width: 13px; height: 13px; color: #d97706; }
+
+  /* Charts */
+  .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .chart-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px; overflow: hidden; }
+  .chart-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 2px; }
+  .chart-title { font-size: 12.5px; font-weight: 600; color: #0f172a; }
+  .chart-sub { font-size: 10px; color: #94a3b8; }
+  .trend-badge { font-size: 9.5px; font-weight: 600; padding: 2px 7px; border-radius: 99px; background: #fee2e2; color: #dc2626; display: flex; align-items: center; gap: 3px; }
+  .chart-link { font-size: 10.5px; color: #10b981; font-weight: 500; cursor: pointer; }
+  .chart-area { height: 80px; display: flex; align-items: flex-end; gap: 5px; margin-top: 10px; }
+  .bar { flex: 1; border-radius: 3px 3px 0 0; transform-origin: bottom; animation: growBar 0.8s ease forwards; opacity: 0; }
+  @keyframes growBar { from { transform: scaleY(0); opacity: 0; } to { transform: scaleY(1); opacity: 1; } }
+  .bar.blue { background: #3b82f6; }
+  .bar.green { background: #10b981; }
+  .bar.blue-light { background: #93c5fd; }
+  .chart-labels { display: flex; gap: 5px; margin-top: 5px; }
+  .chart-label { flex: 1; text-align: center; font-size: 8.5px; color: #94a3b8; }
+</style>
+</head>
+<body>
+<div class="content">
+  <div class="top-bar">
+    <div>
+      <div class="page-label">Dashboard</div>
+      <div class="page-title">Agency overview</div>
+      <div class="page-sub">Your care operations at a glance.</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div style="width:8px;height:8px;border-radius:50%;background:#10b981;animation:pulse 2s infinite"></div>
+      <span style="font-size:10px;color:#64748b;font-weight:500">Live</span>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+      <div class="kpi-value green" data-target="11">0</div>
+      <div class="kpi-label">Active clients</div>
+      <div class="kpi-sub">Currently receiving care</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></div>
+      <div class="kpi-value teal" id="revenue-val">₹0</div>
+      <div class="kpi-label">Monthly recurring</div>
+      <div class="kpi-sub">From active subscriptions</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+      <div class="kpi-value" data-target="11" style="color:#2563eb">0</div>
+      <div class="kpi-label">Open enquiries</div>
+      <div class="kpi-sub">New or in conversation</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+      <div class="kpi-value orange" data-target="5">0</div>
+      <div class="kpi-label">Visits today</div>
+      <div class="kpi-sub">Scheduled for today</div>
+    </div>
+  </div>
+
+  <div class="attention-banner">
+    <div class="attention-header">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>Needs attention</span>
+    </div>
+    <div class="attention-item"><span>6 enquiries awaiting first contact</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9,18 15,12 9,6"/></svg></div>
+    <div class="attention-item"><span>1 active client without a caretaker assigned</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9,18 15,12 9,6"/></svg></div>
+    <div class="attention-item"><span>1 overdue invoice</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9,18 15,12 9,6"/></svg></div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-header">
+        <div><div class="chart-title">Enquiries received</div><div class="chart-sub">Last 8 weeks</div></div>
+        <div class="trend-badge"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>-6 vs last week</div>
+      </div>
+      <div class="chart-area" id="enq-chart"></div>
+      <div class="chart-labels" id="enq-labels"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header">
+        <div><div class="chart-title">Revenue collected</div><div class="chart-sub">Last 6 months</div></div>
+        <div class="chart-link">Billing →</div>
+      </div>
+      <div class="chart-area" id="rev-chart"></div>
+      <div class="chart-labels" id="rev-labels"></div>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+</style>
+
+<script>
+// Auto-scale to fit iframe container
+(function() {
+  var DESIGN_W = 900, DESIGN_H = 600;
+  function scale() {
+    var sx = window.innerWidth / DESIGN_W;
+    var sy = window.innerHeight / DESIGN_H;
+    var s = Math.min(sx, sy);
+    document.body.style.transform = 'scale(' + s + ')';
+    document.body.style.transformOrigin = 'top left';
+    document.body.style.width = DESIGN_W + 'px';
+    document.body.style.height = DESIGN_H + 'px';
+  }
+  scale();
+  window.addEventListener('resize', scale);
+})();
+
+// Count-up
+document.querySelectorAll('[data-target]').forEach(function(el) {
+  var t = +el.dataset.target, c = 0, step = Math.ceil(t/18);
+  var iv = setInterval(function(){ c = Math.min(c+step,t); el.textContent=c; if(c>=t)clearInterval(iv); }, 50);
+});
+var rv = 0, rEl = document.getElementById('revenue-val');
+var rIv = setInterval(function(){ rv=Math.min(rv+0.1,4.5); rEl.textContent='₹'+rv.toFixed(1)+'L'; if(rv>=4.5)clearInterval(rIv); }, 50);
+
+// Charts
+var enqD=[3,5,4,7,6,14,12,9], enqL=['20/4','27/4','4/5','11/5','18/5','25/5','1/6','8/6'];
+var eMax=Math.max.apply(null,enqD);
+enqD.forEach(function(v,i){ var b=document.createElement('div'); b.className='bar '+(i===5?'blue':'blue-light'); b.style.height=Math.max(6,(v/eMax)*70)+'px'; b.style.animationDelay=(i*0.07)+'s'; document.getElementById('enq-chart').appendChild(b); var l=document.createElement('div'); l.className='chart-label'; l.textContent=enqL[i]; document.getElementById('enq-labels').appendChild(l); });
+var revD=[68,75,55,90,95,30], revL=['Jan','Feb','Mar','Apr','May','Jun'];
+var rMax=Math.max.apply(null,revD);
+revD.forEach(function(v,i){ var b=document.createElement('div'); b.className='bar green'; b.style.height=Math.max(6,(v/rMax)*70)+'px'; b.style.animationDelay=(i*0.09)+'s'; document.getElementById('rev-chart').appendChild(b); var l=document.createElement('div'); l.className='chart-label'; l.textContent=revL[i]; document.getElementById('rev-labels').appendChild(l); });
+</script>
+</body>
+</html>

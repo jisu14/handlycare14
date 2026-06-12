@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Caretakers — Handly</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { height: 100%; overflow: hidden; background: #f8fafc; }
+  body { font-family: 'Inter', sans-serif; background: #f8fafc; font-size: 13px; width: 900px; height: 600px; overflow: hidden; transform-origin: top left; }
+
+  .content { padding: 18px 24px; height: 100%; overflow: hidden; }
+
+  .page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
+  .page-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #94a3b8; margin-bottom: 3px; }
+  .page-title { font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 2px; }
+  .page-sub { font-size: 11px; color: #64748b; }
+  .btn-primary { background: #10b981; color: #fff; border: none; border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+  .btn-primary svg { width: 13px; height: 13px; }
+
+  .status-chips { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
+  .chip { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 10px 12px; display: flex; align-items: center; gap: 8px; }
+  .chip-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .chip-val { font-size: 20px; font-weight: 700; color: #0f172a; }
+  .chip-lbl { font-size: 10px; color: #64748b; }
+
+  .search-row { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
+  .search-box { flex: 1; display: flex; align-items: center; gap: 7px; background: #fff; border: 1px solid #e5e7eb; border-radius: 7px; padding: 6px 10px; }
+  .search-box svg { width: 13px; height: 13px; color: #94a3b8; flex-shrink: 0; }
+  .search-box input { border: none; outline: none; font-size: 11.5px; color: #374151; flex: 1; font-family: inherit; background: transparent; }
+  .search-box input::placeholder { color: #94a3b8; }
+  .filter-btn { display: flex; align-items: center; gap: 5px; padding: 6px 11px; border: 1px solid #e5e7eb; border-radius: 7px; background: #fff; font-size: 11.5px; color: #374151; cursor: pointer; font-family: inherit; }
+  .filter-btn svg { width: 11px; height: 11px; color: #94a3b8; }
+
+  .table-wrapper { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; }
+  .table-head { display: grid; grid-template-columns: 1.8fr 1.5fr 1.3fr 0.9fr 0.6fr; gap: 10px; padding: 8px 14px; background: #f8fafc; border-bottom: 1px solid #e5e7eb; }
+  .th { font-size: 9.5px; font-weight: 700; color: #94a3b8; letter-spacing: 0.07em; text-transform: uppercase; }
+  .ct-row { display: grid; grid-template-columns: 1.8fr 1.5fr 1.3fr 0.9fr 0.6fr; gap: 10px; align-items: center; padding: 11px 14px; border-bottom: 1px solid #f1f5f9; transition: background 0.15s; cursor: pointer; }
+  .ct-row:last-child { border-bottom: none; }
+  .ct-row:hover { background: #f8fafc; }
+
+  .ct-info { display: flex; align-items: center; gap: 9px; }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; flex-shrink: 0; }
+  .ct-name { font-size: 12px; font-weight: 600; color: #0f172a; }
+  .ct-location { font-size: 10px; color: #94a3b8; }
+
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 3px; margin-bottom: 3px; }
+  .tag { font-size: 9.5px; padding: 1px 7px; border-radius: 999px; background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; white-space: nowrap; }
+  .more-tag { font-size: 9.5px; color: #94a3b8; }
+  .lang-text { font-size: 10px; color: #64748b; }
+
+  .avail-row { display: flex; gap: 3px; align-items: center; margin-bottom: 2px; }
+  .day-pill { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8.5px; font-weight: 700; }
+  .day-pill.on { background: #e0f2fe; color: #0369a1; }
+  .day-pill.off { background: #f1f5f9; color: #cbd5e1; }
+  .travel-text { font-size: 9.5px; color: #94a3b8; }
+
+  .status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 999px; font-size: 10.5px; font-weight: 600; border: 1px solid; }
+  .status-badge.available { background: #f0fdf4; color: #16a34a; border-color: #bbf7d0; }
+  .status-badge.on-leave { background: #fff7ed; color: #ea580c; border-color: #fed7aa; }
+  .status-badge.on-assignment { background: #eff6ff; color: #2563eb; border-color: #bfdbfe; }
+  .status-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+  .exp-text { font-size: 12px; font-weight: 600; color: #0f172a; }
+</style>
+</head>
+<body>
+<div class="content">
+  <div class="page-header">
+    <div>
+      <div class="page-label">Caretakers</div>
+      <div class="page-title">Care team</div>
+      <div class="page-sub">6 caretakers on your roster</div>
+    </div>
+    <button class="btn-primary">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add caretaker
+    </button>
+  </div>
+
+  <div class="status-chips">
+    <div class="chip"><div class="chip-dot" style="background:#22c55e"></div><div><div class="chip-val">4</div><div class="chip-lbl">Available</div></div></div>
+    <div class="chip"><div class="chip-dot" style="background:#3b82f6"></div><div><div class="chip-val">1</div><div class="chip-lbl">On assignment</div></div></div>
+    <div class="chip"><div class="chip-dot" style="background:#f59e0b"></div><div><div class="chip-val">1</div><div class="chip-lbl">On leave</div></div></div>
+    <div class="chip"><div class="chip-dot" style="background:#94a3b8"></div><div><div class="chip-val">0</div><div class="chip-lbl">Terminated</div></div></div>
+  </div>
+
+  <div class="search-row">
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Search name, city, skill or language…" />
+    </div>
+    <button class="filter-btn">Skills <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></button>
+    <button class="filter-btn">Language <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></button>
+    <button class="filter-btn">Status <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></button>
+  </div>
+
+  <div class="table-wrapper">
+    <div class="table-head">
+      <div class="th">Caretaker</div>
+      <div class="th">Skills & Languages</div>
+      <div class="th">Weekly Availability</div>
+      <div class="th">Status</div>
+      <div class="th">Exp.</div>
+    </div>
+    <div class="ct-row">
+      <div class="ct-info"><div class="avatar" style="background:linear-gradient(135deg,#fbbf24,#f59e0b)">PT</div><div><div class="ct-name">Priya Thomas</div><div class="ct-location">Kochi, Kerala</div></div></div>
+      <div><div class="skill-tags"><span class="tag">Palliative care</span><span class="tag">Dementia</span><span class="more-tag">+1</span></div><div class="lang-text">Malayalam · English · Hindi</div></div>
+      <div><div class="avail-row"><div class="day-pill on">M</div><div class="day-pill on">T</div><div class="day-pill on">W</div><div class="day-pill on">T</div><div class="day-pill on">F</div><div class="day-pill off">S</div><div class="day-pill off">S</div></div><div class="travel-text">Travels up to 12 km</div></div>
+      <div><span class="status-badge available"><span class="status-badge-dot"></span>Available</span></div>
+      <div class="exp-text">7 yrs</div>
+    </div>
+    <div class="ct-row">
+      <div class="ct-info"><div class="avatar" style="background:linear-gradient(135deg,#ec4899,#db2777)">KR</div><div><div class="ct-name">Kavya Reddy</div><div class="ct-location">Bengaluru, Karnataka</div></div></div>
+      <div><div class="skill-tags"><span class="tag">Palliative care</span><span class="tag">Dementia</span><span class="more-tag">+2</span></div><div class="lang-text">Kannada · English · Telugu</div></div>
+      <div><div class="avail-row"><div class="day-pill on">M</div><div class="day-pill on">T</div><div class="day-pill on">W</div><div class="day-pill on">T</div><div class="day-pill on">F</div><div class="day-pill off">S</div><div class="day-pill off">S</div></div><div class="travel-text">Travels up to 10 km</div></div>
+      <div><span class="status-badge available"><span class="status-badge-dot"></span>Available</span></div>
+      <div class="exp-text">6 yrs</div>
+    </div>
+    <div class="ct-row">
+      <div class="ct-info"><div class="avatar" style="background:linear-gradient(135deg,#6366f1,#4f46e5)">SB</div><div><div class="ct-name">Suresh Babu</div><div class="ct-location">Chennai, Tamil Nadu</div></div></div>
+      <div><div class="skill-tags"><span class="tag">Post-surgery</span><span class="tag">Elderly care</span><span class="more-tag">+1</span></div><div class="lang-text">Tamil · English · Telugu</div></div>
+      <div><div class="avail-row"><div class="day-pill on">M</div><div class="day-pill on">T</div><div class="day-pill on">W</div><div class="day-pill on">T</div><div class="day-pill on">F</div><div class="day-pill off">S</div><div class="day-pill off">S</div></div><div class="travel-text">Travels up to 18 km</div></div>
+      <div><span class="status-badge available"><span class="status-badge-dot"></span>Available</span></div>
+      <div class="exp-text">11 yrs</div>
+    </div>
+    <div class="ct-row">
+      <div class="ct-info"><div class="avatar" style="background:linear-gradient(135deg,#0ea5e9,#0284c7)">SD</div><div><div class="ct-name">Sunita Devi</div><div class="ct-location">Mumbai, Maharashtra</div></div></div>
+      <div><div class="skill-tags"><span class="tag">Dementia</span><span class="tag">Elderly care</span></div><div class="lang-text">Hindi · Marathi · English</div></div>
+      <div><div class="avail-row"><div class="day-pill on">M</div><div class="day-pill on">T</div><div class="day-pill on">W</div><div class="day-pill on">T</div><div class="day-pill on">F</div><div class="day-pill on">S</div><div class="day-pill off">S</div></div><div class="travel-text">Travels up to 15 km</div></div>
+      <div><span class="status-badge on-assignment"><span class="status-badge-dot"></span>On assignment</span></div>
+      <div class="exp-text">9 yrs</div>
+    </div>
+    <div class="ct-row">
+      <div class="ct-info"><div class="avatar" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed)">RK</div><div><div class="ct-name">Ramesh Kumar</div><div class="ct-location">Delhi, NCR</div></div></div>
+      <div><div class="skill-tags"><span class="tag">Post-surgery</span><span class="tag">Mobility</span></div><div class="lang-text">Hindi · English · Punjabi</div></div>
+      <div><div class="avail-row"><div class="day-pill on">M</div><div class="day-pill on">T</div><div class="day-pill on">W</div><div class="day-pill off">T</div><div class="day-pill on">F</div><div class="day-pill off">S</div><div class="day-pill off">S</div></div><div class="travel-text">Travels up to 20 km</div></div>
+      <div><span class="status-badge on-leave"><span class="status-badge-dot"></span>On leave</span></div>
+      <div class="exp-text">5 yrs</div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var DESIGN_W = 900, DESIGN_H = 600;
+  function scale() {
+    var sx = window.innerWidth / DESIGN_W;
+    var sy = window.innerHeight / DESIGN_H;
+    var s = Math.min(sx, sy);
+    document.body.style.transform = 'scale(' + s + ')';
+    document.body.style.transformOrigin = 'top left';
+    document.body.style.width = DESIGN_W + 'px';
+    document.body.style.height = DESIGN_H + 'px';
+  }
+  scale();
+  window.addEventListener('resize', scale);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Brand (Dark Mode defaults) */
+  --primary: #0E7A80;
+  --primary-dark: #085258;
+  --primary-light: rgba(14, 122, 128, 0.1);
+  --primary-ultra-light: rgba(14, 122, 128, 0.05);
+  --accent: #4fd1d4;
+
+  /* Semantic */
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
+  --info: #0EA5E9;
+
+  /* Surfaces */
+  --canvas: #080C0C;
+  --surface: #141A1A;
+  --surface-50: #0F1416;
+  --surface-100: #141A1A;
+  --surface-150: #1A2024;
+  --surface-200: #1E2626;
+  --surface-300: #2A3034;
+  --surface-elevated: #1E2626;
+
+  /* Text */
+  --ink: #F0F4F7;
+  --ink-strong: #FFFFFF;
+  --ink-default: #CBD5E0;
+  --ink-muted: #CBD5E0; /* WCAG AA */
+  --ink-tertiary: #B8C8D8;
+
+  /* Borders & Utils */
+  --hairline: rgba(255, 255, 255, 0.15); /* Improved from 0.06 */
+  --border-light: rgba(255, 255, 255, 0.15);
+  --border-dark: rgba(255, 255, 255, 0.15);
+  --focus-ring: #0E7A80;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: var(--canvas);
+    color: var(--ink);
+    font-family: var(--font-dm-sans), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-fraunces), Georgia, serif;
+  }
+  
+  /* Focus Visible Global Rule */
+  *:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+  
+  /* Skip Link */
+  .skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--primary);
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    z-index: 10000;
+    border-radius: 0 0 4px 0;
+    transition: top 0.2s;
+  }
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+}
+
+/* Custom Cursor override for fine pointers (desktops) */
+@media (pointer: fine) {
+  * {
+    cursor: none !important;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-black/70 backdrop-blur-md border border-white/10;
+  }
+  .glass-card {
+    @apply glass shadow-card hover:shadow-hover transition-all duration-300;
+  }
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
+  }
+  .section-padding {
+    @apply py-20 lg:py-32;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

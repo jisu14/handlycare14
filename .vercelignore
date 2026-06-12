@@ -1,0 +1,26 @@
+# Dependency directories
+node_modules/
+
+# Build outputs
+.next/
+out/
+build/
+
+# Local env files
+.env*.local
+
+# Vercel directory
+.vercel
+
+# Git directory
+.git/
+
+# Cache files and debug logs
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+
+# Documentation
+README.md
